@@ -5,8 +5,11 @@ import 'package:kiosk_app/feature/auth/repository/auth_repository.dart';
 import 'package:kiosk_app/model/user_model.dart';
 
 //Provider
-// final authControllerProvider=
-//     StateNotifierProvider(AuthController,As)
+final authControllerProvider=
+     StateNotifierProvider<AuthController,AsyncValue<UserModel?>>((ref){
+       final repo=ref.watch(authRepositoryProvider);
+       return AuthController(ref,repo);
+     });
 
 
 class AuthController extends StateNotifier<AsyncValue<UserModel?>>{

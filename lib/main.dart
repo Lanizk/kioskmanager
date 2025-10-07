@@ -2,28 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:kiosk_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-void main() async{
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kiosk_app/theme/pallete.dart';
+import 'package:kiosk_app/theme/theme_notifier.dart';
+ import'package:kiosk_app/route.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
+    options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeNotifierProvider);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Kiosk Manager',
-      theme: ThemeData(primarySwatch: Colors.green),
-      home:const Scaffold(
-        body:Center(child:Text("Firebase Connected")),
-      )
 
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ref.watch(themeNotifierProvider.notifier).mode,
+
+      // Routes
+      initialRoute: AppRoutes.login,
+      routes: AppRoutes.routes,
     );
   }
 }
